@@ -5,7 +5,7 @@ node {
      sh "git rev-parse --short HEAD > .git/commit-id"                        
      commit_id = readFile('.git/commit-id').trim()
      env.docker_cmd = "${tool('docker-latest')}/bin/docker"
-     echo "${docker_cmd} -v"
+     sh "echo ${docker_cmd} -v"
    }
    stage('test') {
      nodejs(nodeJSInstallationName: 'nodejs-latest') {
@@ -14,8 +14,8 @@ node {
      }
    }
    stage('docker build/push') {
-     withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub', toolName: 'docker-latest']) {
-        sh "${docker_cmd} build -t='https://index.docker.io/v1/docker-jenkins-demo:${commit_id}' ."
+     withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub']) {
+        sh "docker build -t='https://index.docker.io/v1/docker-jenkins-demo:${commit_id}' ."
         sh "${docker_cmd} push https://index.docker.io/v1/docker-jenkins-demo:${commit_id}"
      }
    }
