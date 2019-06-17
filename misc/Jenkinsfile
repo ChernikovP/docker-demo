@@ -15,8 +15,8 @@ node {
    }
    stage('docker build/push') {
      withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub']) {
-        sh "docker build -t='https://index.docker.io/v1/docker-jenkins-demo:${commit_id}' ."
-        sh "${docker_cmd} push https://index.docker.io/v1/docker-jenkins-demo:${commit_id}"
+        sh "${docker_cmd} build -t='chernikovp/docker-jenkins-demo:${commit_id}' ."
+        sh "${docker_cmd} push chernikovp/docker-jenkins-demo:${commit_id}"
      }
    }
 }
