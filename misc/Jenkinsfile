@@ -4,6 +4,7 @@ node {
      checkout scm
      sh "git rev-parse --short HEAD > .git/commit-id"                        
      commit_id = readFile('.git/commit-id').trim()
+     env.docker_cmd = "${tool('docker-latest')}/bin/docker"
    }
    stage('test') {
      nodejs(nodeJSInstallationName: 'nodejs-latest') {
@@ -12,8 +13,9 @@ node {
      }
    }
    stage('docker build/push') {
-     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub', 'docker-latest') {
-       def app = docker.build("chernikovp/docker-jenkins-demo:${commit_id}", '.').push()
+     withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+        sh "${docker_cmd} build -t='https://index.docker.io/v1/docker-jenkins-demo:${commit_id}' ."
+        sh "${docker_cmd} push https://index.docker.io/v1/docker-jenkins-demo:${commit_id}"
      }
    }
 }
