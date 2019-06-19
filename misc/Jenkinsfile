@@ -9,13 +9,14 @@ node {
    }
    stage('test') {
      nodejs(nodeJSInstallationName: 'nodejs-latest') {
+       sh 'cd web/'
        sh 'npm install --only=dev'
        sh 'npm test'
      }
    }
    stage('docker build/push') {
      withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub']) {
-        sh "${docker_cmd} build -t='chernikovp/docker-jenkins-demo:${commit_id}' ."
+        sh "${docker_cmd} build -t='chernikovp/docker-jenkins-demo:${commit_id}' web/"
         sh "${docker_cmd} push chernikovp/docker-jenkins-demo:${commit_id}"
      }
    }
