@@ -7,13 +7,6 @@ node {
      env.docker_cmd = "${tool('docker-default')}/bin/docker"
      sh "echo ${docker_cmd} -v"
    }
-   stage('test') {
-     nodejs(nodeJSInstallationName: 'nodejs-latest') {
-       sh 'cd web/'
-       sh 'npm install --only=dev'
-       sh 'npm test'
-     }
-   }
    stage('docker build/push') {
      withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub']) {
         sh "${docker_cmd} build -t='chernikovp/docker-jenkins-demo:${commit_id}' web/"
