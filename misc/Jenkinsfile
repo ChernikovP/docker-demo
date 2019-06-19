@@ -4,7 +4,7 @@ node {
      checkout scm
      sh "git rev-parse --short HEAD > .git/commit-id"                        
      commit_id = readFile('.git/commit-id').trim()
-     env.docker_cmd = "${tool('docker-latest')}/bin/docker"
+     env.docker_cmd = "${tool('docker-default')}/bin/docker"
      sh "echo ${docker_cmd} -v"
    }
    stage('test') {
